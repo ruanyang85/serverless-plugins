@@ -119,7 +119,11 @@ class SQS {
           const event = new SQSEvent(messages, this.region, arn);
           lambdaFunction.setEvent(event);
 
-          await lambdaFunction.runHandler();
+          const error = await lambdaFunction.runHandler();
+          if (error !== undefined) {
+            console.log("error happened here...", error);
+            throw new Error(error);
+          }
 
           await Promise.all(
             chunk(
